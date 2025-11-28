@@ -1,0 +1,228 @@
+/* style.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fafafa;
+    margin: 0;
+    padding: 0;
+    padding-bottom: 160px;
+}
+
+header {
+    background-color: #f9ebeb; 
+    color: #333;
+    text-align: center;
+    padding: 0.5rem 1rem 1rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.logo-img {
+    max-width: 170px;
+    height: auto;
+    display: block;
+    margin: 0 auto 5px auto;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+/* --- ALTERAÇÃO AQUI: Estilo do Título Clicável --- */
+.categoria-titulo {
+    color: #8a5a5b;
+    border-bottom: 2px solid #e0c0c0;
+    padding-bottom: 10px;
+    margin-top: 30px;
+    font-size: 1.3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer; /* Mãozinha de clique */
+    user-select: none; /* Não seleciona o texto ao clicar */
+    transition: background 0.2s;
+}
+
+.categoria-titulo:active {
+    background-color: #fafafa;
+}
+
+.seta-collapse {
+    font-size: 1rem;
+    color: #c08081;
+    transition: transform 0.3s ease; /* Animação da rotação */
+}
+
+/* Quando estiver fechado, a seta gira */
+.categoria-titulo.fechado .seta-collapse {
+    transform: rotate(-90deg);
+}
+
+/* Container dos itens que vai abrir/fechar */
+.itens-container {
+    display: block; /* Começa visível */
+    animation: fadeIn 0.5s;
+}
+
+.itens-container.oculto {
+    display: none; /* Esconde */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.item-card {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border-left: 5px solid transparent;
+}
+
+.item-card.selected {
+    border-left: 5px solid #c08081;
+}
+
+.item-info h3 { margin: 0; font-size: 1rem; color: #333; }
+.item-info p { margin: 5px 0 0; color: #666; font-size: 0.9rem; }
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-qty {
+    background-color: #f0f0f0;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    font-weight: bold;
+    cursor: pointer;
+    color: #333;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qty-input {
+    width: 50px;
+    height: 35px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    -moz-appearance: textfield;
+    appearance: textfield;
+    color: #333;
+}
+
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.qty-input:focus {
+    outline: none;
+    border-color: #c08081;
+    background-color: #fffafa;
+}
+
+.section-box {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.option-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 8px;
+    border-radius: 5px;
+    transition: 0.2s;
+}
+.option-group label:hover { background-color: #fff0f0; }
+
+.input-field {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-family: inherit;
+    margin-top: 5px;
+}
+
+.cart-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    padding: 15px;
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+
+#avisos-container {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    display: none;
+    border: 1px solid #ffeeba;
+}
+
+.cart-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.btn-whatsapp {
+    background-color: #25D366;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.btn-disabled {
+    background-color: #ccc !important;
+    cursor: not-allowed;
+    opacity: 0.7;
+}

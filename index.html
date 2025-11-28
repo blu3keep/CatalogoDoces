@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="robots" content="noindex, nofollow">
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline';">
+    
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <title>Lavie Trufas - Cardápio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <img src="logo.jpg" alt="Lavie Trufas" class="logo-img">
+        
+        <div style="margin-top: 5px;">
+            <input type="text" id="cliente-nome" class="input-field" placeholder="Digite seu Nome completo..." 
+                   style="text-align: center;" maxlength="50">
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="menu-container">
+            </div>
+
+        <div class="section-box">
+            <h3>📦 Forma de Entrega / Retirada</h3>
+            <div class="option-group">
+                <label>
+                    <input type="radio" name="entrega" value="Retirada" onclick="toggleEndereco(false)">
+                    Vou Retirar (São Pedro - Teresópolis)
+                </label>
+                <label>
+                    <input type="radio" name="entrega" value="Entrega" onclick="toggleEndereco(true)">
+                    Quero Entrega (Calcular frete)
+                </label>
+            </div>
+            <div id="endereco-container" style="display:none; margin-top:10px;">
+                <input type="text" id="endereco" class="input-field" placeholder="Endereço completo (Rua, Nº, Bairro, Referência)" maxlength="150">
+            </div>
+        </div>
+
+        <div class="section-box">
+            <h3>💳 Forma de Pagamento</h3>
+            <p style="font-size: 0.8rem; color: #666; margin-bottom: 10px;">Sinal de 50% para confirmação:</p>
+            <div class="option-group">
+                <label style="align-items: flex-start;">
+                    <input type="checkbox" name="pagamento" value="Pix" style="margin-top: 3px;">
+                    <div style="display: flex; flex-direction: column;">
+                        <span>Pix</span>
+                        <span style="font-size: 0.85rem; color: #555; font-weight: normal;">
+                            Chave CNPJ: <strong>55.675.604/0001-20</strong>
+                        </span>
+                    </div>
+                </label>
+                <label>
+                    <input type="checkbox" name="pagamento" value="Dinheiro">
+                    Dinheiro
+                </label>
+                <label>
+                    <input type="checkbox" name="pagamento" value="Cartão de Crédito">
+                    Cartão de Crédito (c/ taxa)
+                </label>
+            </div>
+        </div>
+
+        <div class="section-box">
+            <h3>📝 Observações</h3>
+            <textarea id="observacoes" class="input-field" rows="3" placeholder="Ex: Retirada às 14h; Sem canela; Troco para 50..." maxlength="300"></textarea>
+        </div>
+
+    </div>
+
+    <div class="cart-bar">
+        <div id="avisos-container"></div>
+        <div class="cart-info">
+            <div id="total-price" style="font-size: 1.2rem; font-weight: bold; color: #333;">
+                Total: R$ 0.00
+            </div>
+            <button id="btn-checkout" class="btn-whatsapp btn-disabled" onclick="finalizarPedido()">
+                Enviar Pedido
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
