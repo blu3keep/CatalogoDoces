@@ -43,8 +43,8 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    cursor: pointer; /* Mãozinha de clique */
-    user-select: none; /* Não seleciona o texto ao clicar */
+    cursor: pointer; 
+    user-select: none; 
     transition: background 0.2s;
 }
 
@@ -55,22 +55,21 @@ header {
 .seta-collapse {
     font-size: 1rem;
     color: #c08081;
-    transition: transform 0.3s ease; /* Animação da rotação */
+    transition: transform 0.3s ease; 
 }
 
-/* Quando estiver fechado, a seta gira */
 .categoria-titulo.fechado .seta-collapse {
     transform: rotate(-90deg);
 }
 
-/* Container dos itens que vai abrir/fechar */
+
 .itens-container {
-    display: block; /* Começa visível */
+    display: block; 
     animation: fadeIn 0.5s;
 }
 
 .itens-container.oculto {
-    display: none; /* Esconde */
+    display: none; 
 }
 
 @keyframes fadeIn {
@@ -225,4 +224,44 @@ header {
     background-color: #ccc !important;
     cursor: not-allowed;
     opacity: 0.7;
+}
+
+
+.kit-opcoes {
+    margin-top: 15px;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    display: none; 
+    animation: fadeIn 0.5s;
+}
+
+.kit-opcoes.visivel {
+    display: block; 
+}
+
+.kit-label {
+    display: block;
+    font-size: 0.85rem;
+    color: #8a5a5b;
+    font-weight: bold;
+    margin-top: 8px;
+    margin-bottom: 3px;
+}
+
+.kit-select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: white;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.kit-select:focus {
+    outline: none;
+    border-color: #c08081;
 }

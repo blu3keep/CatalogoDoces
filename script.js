@@ -128,7 +128,6 @@
                 { nome: "Doce de Leite com Nozes", preco: 2.00 }
             ]
         },
-        // --- CATEGORIAS ESPECIAIS (LIVRES + AVISO DE ESTOQUE) ---
         {
             categoria: "Para você ou para presentear",
             regraLivre: true, 
@@ -147,7 +146,8 @@
                 { nome: "Guirlanda com 6 doces", preco: 15.00 },
                 { nome: "Árvore com 6 doces", preco: 20.00 },
                 { nome: "Árvore de Natal com 44 doces", preco: 70.00 },
-                { nome: "Taça de uva ou morango", preco: 70.00 }
+                { nome: "Taça de uva ou morango", preco: 70.00 },
+                { nome: "Kit 100 doces (50 Finos + 50 Tradicionais)", preco: 200.00, kit: true }
             ]
         }
     ]);
@@ -167,6 +167,42 @@
             titulo.classList.add('fechado'); 
         }
     };
+
+    function getSaboresPorCategoria(nomeCategoria) {
+        const cat = menu.find(c => c.categoria === nomeCategoria);
+        return cat ? cat.itens : [];
+    }
+
+    function gerarOpcoesKit(idBase) {
+        const tradicionais = getSaboresPorCategoria("Brigadeiros Tradicionais");
+        const finos = getSaboresPorCategoria("Doces Finos");
+
+        let html = `<div id="opcoes-${idBase}" class="kit-opcoes">`;
+
+        
+        html += `<span class="kit-label">Escolha os 2 sabores Tradicionais (25 de cada):</span>`;
+        html += criarSelect(idBase, 'trad1', tradicionais, 'Tradicional 1');
+        html += `<div style="margin-top:5px"></div>`;
+        html += criarSelect(idBase, 'trad2', tradicionais, 'Tradicional 2');
+
+        html += `<span class="kit-label" style="margin-top:10px">Escolha os 2 sabores Finos (25 de cada):</span>`;
+        html += criarSelect(idBase, 'fino1', finos, 'Fino 1');
+        html += `<div style="margin-top:5px"></div>`;
+        html += criarSelect(idBase, 'fino2', finos, 'Fino 2');
+
+        html += `</div>`;
+        return html;
+    }
+
+    function criarSelect(idBase, sufixo, itens, placeholder) {
+        let select = `<select id="sel-${idBase}-${sufixo}" class="kit-select">`;
+        select += `<option value="">Selecione ${placeholder}...</option>`;
+        itens.forEach(item => {
+            select += `<option value="${item.nome}">${item.nome}</option>`;
+        });
+        select += `</select>`;
+        return select;
+    }
 
     window.renderMenu = function() {
         const menuContainer = document.getElementById('menu-container');
@@ -196,26 +232,41 @@
                         nome: item.nome, 
                         preco: item.preco, 
                         qtd: 0, 
-                        catIndex: index 
+                        catIndex: index,
+                        isKit: item.kit === true
                     };
                 }
 
                 const card = document.createElement('div');
                 card.className = 'item-card';
+                if (item.kit) {
+                    card.style.flexDirection = "column";
+                    card.style.alignItems = "stretch";
+                }
+                
                 card.id = `card-${id}`;
-                card.innerHTML = `
-                    <div class="item-info">
-                        <h3>${item.nome}</h3>
-                        <p>R$ ${item.preco.toFixed(2)} uni</p>
-                    </div>
-                    <div class="controls">
-                        <button class="btn-qty" onclick="changeQty('${id}', -1)">-</button>
-                        <input type="number" id="qty-${id}" class="qty-input" value="0" min="0" 
-                               oninput="manualInput('${id}', this.value)" 
-                               onfocus="this.select()">
-                        <button class="btn-qty" onclick="changeQty('${id}', 1)">+</button>
+                
+                let cardContent = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; width:100%">
+                        <div class="item-info">
+                            <h3>${item.nome}</h3>
+                            <p>R$ ${item.preco.toFixed(2)} uni</p>
+                        </div>
+                        <div class="controls">
+                            <button class="btn-qty" onclick="changeQty('${id}', -1)">-</button>
+                            <input type="number" id="qty-${id}" class="qty-input" value="0" min="0" 
+                                   oninput="manualInput('${id}', this.value)" 
+                                   onfocus="this.select()">
+                            <button class="btn-qty" onclick="changeQty('${id}', 1)">+</button>
+                        </div>
                     </div>
                 `;
+
+                if (item.kit) {
+                    cardContent += gerarOpcoesKit(id);
+                }
+
+                card.innerHTML = cardContent;
                 itemsContainerDiv.appendChild(card);
             });
             
@@ -240,9 +291,17 @@
     function processChange(id, qtd) {
         cart[id].qtd = qtd;
         const card = document.getElementById(`card-${id}`);
-        
         const categoria = menu[cart[id].catIndex];
         const ehLivre = categoria.regraLivre === true;
+
+        if (cart[id].isKit) {
+            const divOpcoes = document.getElementById(`opcoes-${id}`);
+            if (qtd > 0) {
+                divOpcoes.classList.add('visivel');
+            } else {
+                divOpcoes.classList.remove('visivel');
+            }
+        }
 
         if (qtd > 0) {
             if (!ehLivre && qtd < MINIMO_POR_ITEM_NORMAL) {
@@ -348,6 +407,8 @@
 
         document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
         document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+        document.querySelectorAll('select').forEach(el => el.value = ""); 
+        document.querySelectorAll('.kit-opcoes').forEach(el => el.classList.remove('visivel'));
 
         toggleEndereco(false);
 
@@ -408,6 +469,22 @@
             return;
         }
 
+        // --- VALIDAÇÃO DO KIT ---
+        for(let id in cart) {
+            if(cart[id].qtd > 0 && cart[id].isKit) {
+                const trad1 = document.getElementById(`sel-${id}-trad1`).value;
+                const trad2 = document.getElementById(`sel-${id}-trad2`).value;
+                const fino1 = document.getElementById(`sel-${id}-fino1`).value;
+                const fino2 = document.getElementById(`sel-${id}-fino2`).value;
+
+                if(!trad1 || !trad2 || !fino1 || !fino2) {
+                    alert("Atenção: Selecione os 4 sabores do Kit 100 doces.");
+                    document.getElementById(`card-${id}`).scrollIntoView({behavior: 'smooth', block: 'center'});
+                    return;
+                }
+            }
+        }
+
         const dataFormatada = dataPedido.split('-').reverse().join('/');
         const numeroPedido = Math.floor(10000 + Math.random() * 90000);
 
@@ -451,6 +528,17 @@
                     totalGeral += subtotal;
                     totalItens += item.qtd;
                     mensagem += `${item.qtd}x ${item.nome} (R$ ${subtotal.toFixed(2)})\n`;
+
+                    // CORREÇÃO: Usando 'item.isKit' (como foi salvo no carrinho) e não 'item.kit' (como está no menu)
+                    if (item.isKit) {
+                        const trad1 = document.getElementById(`sel-${item.id}-trad1`).value;
+                        const trad2 = document.getElementById(`sel-${item.id}-trad2`).value;
+                        const fino1 = document.getElementById(`sel-${item.id}-fino1`).value;
+                        const fino2 = document.getElementById(`sel-${item.id}-fino2`).value;
+
+                        mensagem += `*Tradicionais:* ${trad1}, ${trad2}\n`;
+                        mensagem += `*Finos:* ${fino1}, ${fino2}\n`;
+                    }
                 });
                 mensagem += `\n`;
             }
