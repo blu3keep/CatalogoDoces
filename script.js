@@ -15,6 +15,7 @@
 
     const MINIMO_GLOBAL_NORMAIS = 50;
     const MINIMO_POR_ITEM_NORMAL = 25;
+    const MAX_QTD_KIT = 5;
 
     const menu = Object.freeze([
         {
@@ -173,25 +174,45 @@
         return cat ? cat.itens : [];
     }
 
-    function gerarOpcoesKit(idBase) {
+    function atualizarDropdownsKit(idBase, quantidade) {
+        const divContainer = document.getElementById(`opcoes-${idBase}`);
+        if (!divContainer) return;
+
+        const valoresSalvos = {};
+        const selectsAtuais = divContainer.querySelectorAll('select');
+        selectsAtuais.forEach(select => {
+            valoresSalvos[select.id] = select.value;
+        });
+
+        let html = '';
         const tradicionais = getSaboresPorCategoria("Brigadeiros Tradicionais");
         const finos = getSaboresPorCategoria("Doces Finos");
 
-        let html = `<div id="opcoes-${idBase}" class="kit-opcoes">`;
+        for (let i = 1; i <= quantidade; i++) {
+            html += `<div style="margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px;">`;
+            html += `<strong style="display:block; color:#c08081; margin-bottom:5px;">Kit #${i}</strong>`;
+            
+            html += `<span class="kit-label">2 Sabores Tradicionais:</span>`;
+            html += criarSelect(idBase, `kit${i}-trad1`, tradicionais, 'Tradicional 1');
+            html += `<div style="margin-top:5px"></div>`;
+            html += criarSelect(idBase, `kit${i}-trad2`, tradicionais, 'Tradicional 2');
 
-        
-        html += `<span class="kit-label">Escolha os 2 sabores Tradicionais (25 de cada):</span>`;
-        html += criarSelect(idBase, 'trad1', tradicionais, 'Tradicional 1');
-        html += `<div style="margin-top:5px"></div>`;
-        html += criarSelect(idBase, 'trad2', tradicionais, 'Tradicional 2');
+            html += `<span class="kit-label" style="margin-top:10px">2 Sabores Finos:</span>`;
+            html += criarSelect(idBase, `kit${i}-fino1`, finos, 'Fino 1');
+            html += `<div style="margin-top:5px"></div>`;
+            html += criarSelect(idBase, `kit${i}-fino2`, finos, 'Fino 2');
+            
+            html += `</div>`;
+        }
 
-        html += `<span class="kit-label" style="margin-top:10px">Escolha os 2 sabores Finos (25 de cada):</span>`;
-        html += criarSelect(idBase, 'fino1', finos, 'Fino 1');
-        html += `<div style="margin-top:5px"></div>`;
-        html += criarSelect(idBase, 'fino2', finos, 'Fino 2');
+        divContainer.innerHTML = html;
 
-        html += `</div>`;
-        return html;
+        for (let idSelect in valoresSalvos) {
+            const selectRecriado = document.getElementById(idSelect);
+            if (selectRecriado) {
+                selectRecriado.value = valoresSalvos[idSelect];
+            }
+        }
     }
 
     function criarSelect(idBase, sufixo, itens, placeholder) {
@@ -263,7 +284,7 @@
                 `;
 
                 if (item.kit) {
-                    cardContent += gerarOpcoesKit(id);
+                    cardContent += `<div id="opcoes-${id}" class="kit-opcoes"></div>`;
                 }
 
                 card.innerHTML = cardContent;
@@ -276,7 +297,14 @@
 
     window.changeQty = function(id, delta) {
         const input = document.getElementById(`qty-${id}`);
-        let novoValor = parseInt(input.value) + delta;
+        let atual = parseInt(input.value);
+        let novoValor = atual + delta;
+
+        if (delta > 0 && cart[id].isKit && novoValor > MAX_QTD_KIT) {
+            alert(`Para pedidos acima de ${MAX_QTD_KIT} kits, por favor entre em contato direto para verificar disponibilidade.`);
+            return; // Cancela a ação
+        }
+
         if (novoValor < 0) novoValor = 0;
         input.value = novoValor;
         processChange(id, novoValor);
@@ -284,7 +312,15 @@
 
     window.manualInput = function(id, valor) {
         let novoValor = parseInt(valor);
+        
         if (isNaN(novoValor) || novoValor < 0) novoValor = 0;
+
+        if (cart[id].isKit && novoValor > MAX_QTD_KIT) {
+            alert(`Para pedidos acima de ${MAX_QTD_KIT} kits, por favor entre em contato direto.`);
+            document.getElementById(`qty-${id}`).value = 0; // Reseta ou mantém o anterior
+            novoValor = 0;
+        }
+
         processChange(id, novoValor);
     };
 
@@ -298,8 +334,10 @@
             const divOpcoes = document.getElementById(`opcoes-${id}`);
             if (qtd > 0) {
                 divOpcoes.classList.add('visivel');
+                atualizarDropdownsKit(id, qtd);
             } else {
                 divOpcoes.classList.remove('visivel');
+                divOpcoes.innerHTML = ''; 
             }
         }
 
@@ -469,18 +507,20 @@
             return;
         }
 
-        // --- VALIDAÇÃO DO KIT ---
+        // --- VALIDAÇÃO DINÂMICA DOS KITS ---
         for(let id in cart) {
             if(cart[id].qtd > 0 && cart[id].isKit) {
-                const trad1 = document.getElementById(`sel-${id}-trad1`).value;
-                const trad2 = document.getElementById(`sel-${id}-trad2`).value;
-                const fino1 = document.getElementById(`sel-${id}-fino1`).value;
-                const fino2 = document.getElementById(`sel-${id}-fino2`).value;
+                for(let i=1; i <= cart[id].qtd; i++) {
+                    const trad1 = document.getElementById(`sel-${id}-kit${i}-trad1`).value;
+                    const trad2 = document.getElementById(`sel-${id}-kit${i}-trad2`).value;
+                    const fino1 = document.getElementById(`sel-${id}-kit${i}-fino1`).value;
+                    const fino2 = document.getElementById(`sel-${id}-kit${i}-fino2`).value;
 
-                if(!trad1 || !trad2 || !fino1 || !fino2) {
-                    alert("Atenção: Selecione os 4 sabores do Kit 100 doces.");
-                    document.getElementById(`card-${id}`).scrollIntoView({behavior: 'smooth', block: 'center'});
-                    return;
+                    if(!trad1 || !trad2 || !fino1 || !fino2) {
+                        alert(`Atenção: Selecione os 4 sabores do Kit #${i}.`);
+                        document.getElementById(`card-${id}`).scrollIntoView({behavior: 'smooth', block: 'center'});
+                        return;
+                    }
                 }
             }
         }
@@ -529,15 +569,17 @@
                     totalItens += item.qtd;
                     mensagem += `${item.qtd}x ${item.nome} (R$ ${subtotal.toFixed(2)})\n`;
 
-                    // CORREÇÃO: Usando 'item.isKit' (como foi salvo no carrinho) e não 'item.kit' (como está no menu)
                     if (item.isKit) {
-                        const trad1 = document.getElementById(`sel-${item.id}-trad1`).value;
-                        const trad2 = document.getElementById(`sel-${item.id}-trad2`).value;
-                        const fino1 = document.getElementById(`sel-${item.id}-fino1`).value;
-                        const fino2 = document.getElementById(`sel-${item.id}-fino2`).value;
+                        for(let i=1; i <= item.qtd; i++) {
+                            const trad1 = document.getElementById(`sel-${item.id}-kit${i}-trad1`).value;
+                            const trad2 = document.getElementById(`sel-${item.id}-kit${i}-trad2`).value;
+                            const fino1 = document.getElementById(`sel-${item.id}-kit${i}-fino1`).value;
+                            const fino2 = document.getElementById(`sel-${item.id}-kit${i}-fino2`).value;
 
-                        mensagem += `*Tradicionais:* ${trad1}, ${trad2}\n`;
-                        mensagem += `*Finos:* ${fino1}, ${fino2}\n`;
+                            mensagem += `   *Kit #${i}:*\n`;
+                            mensagem += `      - Tradicionais: ${trad1}, ${trad2}\n`;
+                            mensagem += `      - Finos: ${fino1}, ${fino2}\n`;
+                        }
                     }
                 });
                 mensagem += `\n`;
