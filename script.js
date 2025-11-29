@@ -1,11 +1,17 @@
-/* script.js */
-
 (function() { 
     "use strict";
+
+    if (location.hostname !== "localhost" && location.hostname !== "127.0.0.1" && location.protocol !== 'https:') {
+        location.replace(`https://${location.hostname}${location.pathname}${location.search}`);
+    }
 
     if (window.top !== window.self) {
         window.top.location = window.self.location;
     }
+
+    const hoje = new Date().toISOString().split('T')[0];
+    const inputData = document.getElementById('data-pedido');
+    if(inputData) inputData.min = hoje;
 
     const MINIMO_GLOBAL = 50;
     const MINIMO_POR_ITEM = 25;
@@ -143,13 +149,15 @@
             const idContainer = `cat-items-${index}`;
             const idSeta = `cat-seta-${index}`;
 
+            // --- ALTERAÇÃO AQUI ---
+            // Adicionadas as classes 'fechado' e 'oculto' por padrão
             section.innerHTML = `
-                <div class="categoria-titulo" onclick="toggleCategoria('${idContainer}', '${idSeta}')">
+                <div class="categoria-titulo fechado" onclick="toggleCategoria('${idContainer}', '${idSeta}')">
                     ${grupo.categoria}
                     <span id="${idSeta}" class="seta-collapse">▼</span>
                 </div>
-                <div id="${idContainer}" class="itens-container">
-                    </div>
+                <div id="${idContainer}" class="itens-container oculto">
+                </div>
             `;
             
             const itemsContainerDiv = section.querySelector(`#${idContainer}`);
@@ -296,6 +304,7 @@
         document.getElementById('cliente-nome').value = '';
         document.getElementById('endereco').value = '';
         document.getElementById('observacoes').value = '';
+        document.getElementById('data-pedido').value = '';
 
         document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
         document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
@@ -327,6 +336,7 @@
         const nomeCliente = sanitizarInput(document.getElementById('cliente-nome').value);
         const endereco = sanitizarInput(document.getElementById('endereco').value);
         const observacoes = sanitizarInput(document.getElementById('observacoes').value);
+        const dataPedido = document.getElementById('data-pedido').value;
 
         if (!nomeCliente) {
             alert("Por favor, digite seu nome no topo da página.");
@@ -337,6 +347,11 @@
         const opcaoEntrega = document.querySelector('input[name="entrega"]:checked');
         if (!opcaoEntrega) {
             alert("Selecione a forma de entrega/retirada!");
+            return;
+        }
+        
+        if (!dataPedido) {
+            alert("Por favor, selecione a Data para o pedido.");
             return;
         }
 
@@ -353,11 +368,14 @@
             return;
         }
 
+        const dataFormatada = dataPedido.split('-').reverse().join('/');
+
         const numeroPedido = Math.floor(10000 + Math.random() * 90000);
 
         let mensagem = `*SOLICITAÇÃO DE PEDIDO #${numeroPedido}*\n`; 
-        mensagem += `(Sujeito a conferência de valores)\n\n`;
-        mensagem += `*Cliente:* ${nomeCliente}\n\n`;
+        mensagem += `(Sujeito a conferência de valores e disponibilidade de data)\n\n`; 
+        mensagem += `*Cliente:* ${nomeCliente}\n`;
+        mensagem += `*Para:* ${dataFormatada}\n\n`;
         
         let totalGeral = 0;
         let totalItens = 0;

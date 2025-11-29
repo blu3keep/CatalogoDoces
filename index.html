@@ -17,7 +17,6 @@
 
     <header>
         <img src="logo.jpg" alt="Lavie Trufas" class="logo-img">
-        
         <div style="margin-top: 5px;">
             <input type="text" id="cliente-nome" class="input-field" placeholder="Digite seu Nome completo..." 
                    style="text-align: center;" maxlength="50">
@@ -46,6 +45,12 @@
         </div>
 
         <div class="section-box">
+            <h3>📅 Data do Pedido</h3>
+            <p style="font-size: 0.8rem; color: #666; margin-bottom: 5px;">Para quando você quer os doces?</p>
+            <input type="date" id="data-pedido" class="input-field" style="text-align: center; font-weight: bold; color: #555;">
+        </div>
+
+        <div class="section-box">
             <h3>💳 Forma de Pagamento</h3>
             <p style="font-size: 0.8rem; color: #666; margin-bottom: 10px;">Sinal de 50% para confirmação:</p>
             <div class="option-group">
@@ -71,7 +76,7 @@
 
         <div class="section-box">
             <h3>📝 Observações</h3>
-            <textarea id="observacoes" class="input-field" rows="3" placeholder="Ex: Retirada às 14h; Sem canela; Troco para 50..." maxlength="300"></textarea>
+            <textarea id="observacoes" class="input-field" rows="3" placeholder="Ex: Horário específico; Sem canela; Troco para 50..." maxlength="300"></textarea>
         </div>
 
     </div>
