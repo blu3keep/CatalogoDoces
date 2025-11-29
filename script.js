@@ -13,12 +13,13 @@
     const inputData = document.getElementById('data-pedido');
     if(inputData) inputData.min = hoje;
 
-    const MINIMO_GLOBAL = 50;
-    const MINIMO_POR_ITEM = 25;
+    const MINIMO_GLOBAL_NORMAIS = 50;
+    const MINIMO_POR_ITEM_NORMAL = 25;
 
     const menu = Object.freeze([
         {
             categoria: "Brigadeiros Tradicionais",
+            regraLivre: false, 
             itens: [
                 { nome: "Brigadeiro Tradicional", preco: 1.35 },
                 { nome: "Branquinho (Ninho)", preco: 1.35 },
@@ -38,6 +39,7 @@
         },
         {
             categoria: "Brigadeiros Especiais",
+            regraLivre: false,
             itens: [
                 { nome: "Parmesão c/ Doce de Leite", preco: 1.70 },
                 { nome: "Doce de Leite c/ Ameixa", preco: 1.70 },
@@ -73,6 +75,7 @@
         },
         {
             categoria: "Doces Finos",
+            regraLivre: false,
             itens: [
                 { nome: "Esfera de Nutella", preco: 2.75 },
                 { nome: "Esfera Doce de Leite", preco: 2.75 },
@@ -93,6 +96,7 @@
         },
         {
             categoria: "Trufas / Copinhos (Tradicionais)",
+            regraLivre: false,
             itens: [
                 { nome: "Brigadeiro", preco: 1.75 },
                 { nome: "Beijinho", preco: 1.75 },
@@ -107,6 +111,7 @@
         },
         {
             categoria: "Trufas / Copinhos (Especiais)",
+            regraLivre: false,
             itens: [
                 { nome: "Uva", preco: 2.00 },
                 { nome: "Morango", preco: 2.00 },
@@ -121,6 +126,28 @@
                 { nome: "Brigadeiro com Oreo", preco: 2.00 },
                 { nome: "Baunilha com Geleia de Morango", preco: 2.00 },
                 { nome: "Doce de Leite com Nozes", preco: 2.00 }
+            ]
+        },
+        // --- CATEGORIAS ESPECIAIS (LIVRES + AVISO DE ESTOQUE) ---
+        {
+            categoria: "Para você ou para presentear",
+            regraLivre: true, 
+            itens: [
+                { nome: "Caixa com 4 doces tradicionais", preco: 12.00 },
+                { nome: "Caixa com 12 doces tradicionais", preco: 25.00 },
+                { nome: "Caixa degustação luxo (15 un. variadas)", preco: 45.00 }
+            ]
+        },
+        {
+            categoria: "Natal Lavie",
+            regraLivre: true, 
+            itens: [
+                { nome: "Caixinha com 4 unidades (Tradicionais)", preco: 12.00 },
+                { nome: "Caixinha luxo com 4 doces (Tradicionais)", preco: 20.00 },
+                { nome: "Guirlanda com 6 doces", preco: 15.00 },
+                { nome: "Árvore com 6 doces", preco: 20.00 },
+                { nome: "Árvore de Natal com 44 doces", preco: 70.00 },
+                { nome: "Taça de uva ou morango", preco: 70.00 }
             ]
         }
     ]);
@@ -149,8 +176,6 @@
             const idContainer = `cat-items-${index}`;
             const idSeta = `cat-seta-${index}`;
 
-            // --- ALTERAÇÃO AQUI ---
-            // Adicionadas as classes 'fechado' e 'oculto' por padrão
             section.innerHTML = `
                 <div class="categoria-titulo fechado" onclick="toggleCategoria('${idContainer}', '${idSeta}')">
                     ${grupo.categoria}
@@ -216,8 +241,11 @@
         cart[id].qtd = qtd;
         const card = document.getElementById(`card-${id}`);
         
+        const categoria = menu[cart[id].catIndex];
+        const ehLivre = categoria.regraLivre === true;
+
         if (qtd > 0) {
-            if (qtd < MINIMO_POR_ITEM) {
+            if (!ehLivre && qtd < MINIMO_POR_ITEM_NORMAL) {
                 card.style.borderLeft = "5px solid #f0ad4e"; 
                 card.classList.add('selected'); 
             } else {
@@ -244,7 +272,8 @@
 
     function updateTotal() {
         let totalValor = 0;
-        let totalItens = 0;
+        let totalItensNormais = 0; 
+        let temAlgumItem = false;
 
         for (let id in cart) {
             if (cart[id].qtd > 0) {
@@ -252,25 +281,36 @@
                 const precoReal = itemOriginal ? itemOriginal.preco : 0;
                 
                 totalValor += cart[id].qtd * precoReal;
-                totalItens += cart[id].qtd;
+                temAlgumItem = true;
+
+                const categoria = menu[cart[id].catIndex];
+                if (!categoria.regraLivre) {
+                    totalItensNormais += cart[id].qtd;
+                }
             }
         }
         
-        document.getElementById('total-price').innerText = `Total: R$ ${totalValor.toFixed(2)} (${totalItens} un.)`;
+        let totalItensGeral = 0;
+        for(let id in cart) totalItensGeral += cart[id].qtd;
+
+        document.getElementById('total-price').innerText = `Total: R$ ${totalValor.toFixed(2)} (${totalItensGeral} itens)`;
         
         const btn = document.getElementById('btn-checkout');
         const avisosDiv = document.getElementById('avisos-container');
         let listaErros = [];
 
         for (let id in cart) {
-            if (cart[id].qtd > 0 && cart[id].qtd < MINIMO_POR_ITEM) {
-                listaErros.push(`• ${cart[id].nome}: mínimo ${MINIMO_POR_ITEM} un.`);
+            if (cart[id].qtd > 0) {
+                const categoria = menu[cart[id].catIndex];
+                if (!categoria.regraLivre && cart[id].qtd < MINIMO_POR_ITEM_NORMAL) {
+                    listaErros.push(`• ${cart[id].nome}: mínimo ${MINIMO_POR_ITEM_NORMAL} un.`);
+                }
             }
         }
 
-        if (totalItens > 0 && totalItens < MINIMO_GLOBAL) {
-            const falta = MINIMO_GLOBAL - totalItens;
-            listaErros.push(`• Pedido mínimo: ${MINIMO_GLOBAL} unidades (Faltam ${falta})`);
+        if (totalItensNormais > 0 && totalItensNormais < MINIMO_GLOBAL_NORMAIS) {
+            const falta = MINIMO_GLOBAL_NORMAIS - totalItensNormais;
+            listaErros.push(`• Doces tradicionais/finos: mínimo ${MINIMO_GLOBAL_NORMAIS} un. (Faltam ${falta})`);
         }
 
         if (listaErros.length > 0) {
@@ -280,7 +320,7 @@
             avisosDiv.innerHTML = `<strong>Atenção:</strong><br>${listaErros.join('<br>')}`;
         } else {
             avisosDiv.style.display = 'none';
-            if (totalItens > 0) {
+            if (temAlgumItem) {
                 btn.classList.remove('btn-disabled');
                 btn.onclick = finalizarPedido;
             } else {
@@ -369,11 +409,24 @@
         }
 
         const dataFormatada = dataPedido.split('-').reverse().join('/');
-
         const numeroPedido = Math.floor(10000 + Math.random() * 90000);
 
+        let temItemEstoque = false;
+        for(let id in cart) {
+            if(cart[id].qtd > 0 && menu[cart[id].catIndex].regraLivre) {
+                temItemEstoque = true;
+                break;
+            }
+        }
+
         let mensagem = `*SOLICITAÇÃO DE PEDIDO #${numeroPedido}*\n`; 
-        mensagem += `(Sujeito a conferência de valores e disponibilidade de data)\n\n`; 
+        
+        if (temItemEstoque) {
+            mensagem += `(Sujeito a conferência de valores, data e disponibilidade de estoque)\n\n`;
+        } else {
+            mensagem += `(Sujeito a conferência de valores e disponibilidade de data)\n\n`;
+        }
+
         mensagem += `*Cliente:* ${nomeCliente}\n`;
         mensagem += `*Para:* ${dataFormatada}\n\n`;
         
