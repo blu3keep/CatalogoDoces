@@ -13,9 +13,9 @@
     const inputData = document.getElementById('data-pedido');
     if(inputData) inputData.min = hoje;
 
-    const MINIMO_GLOBAL_NORMAIS = 50;
-    const MINIMO_POR_ITEM_NORMAL = 25;
-    const MAX_QTD_KIT = 5;
+    const MINIMO_GLOBAL_NORMAIS = 50; 
+    const MINIMO_POR_ITEM_NORMAL = 25; 
+    const MAX_QTD_KIT = 5; 
 
     const menu = Object.freeze([
         {
@@ -135,7 +135,10 @@
             itens: [
                 { nome: "Caixa com 4 doces tradicionais", preco: 12.00 },
                 { nome: "Caixa com 12 doces tradicionais", preco: 25.00 },
-                { nome: "Caixa degustação luxo (15 un. variadas)", preco: 45.00 }
+                { nome: "Caixa degustação luxo (15 un. variadas)", preco: 45.00 },
+                
+                { nome: "Degustação ou luxo 24 doces", preco: 72.00 },
+                { nome: "Degustação ou luxo 30 doces", preco: 90.00 }
             ]
         },
         {
@@ -146,7 +149,9 @@
                 { nome: "Caixinha luxo com 4 doces (Tradicionais)", preco: 20.00 },
                 { nome: "Guirlanda com 6 doces", preco: 15.00 },
                 { nome: "Árvore com 6 doces", preco: 20.00 },
-                { nome: "Árvore de Natal com 44 doces", preco: 70.00 },
+                
+                { nome: "Caixa com 12 doces", preco: 25.00 },
+                { nome: "Árvore de Natal com 50 doces", preco: 70.00 }, 
                 { nome: "Taça de uva ou morango", preco: 70.00 },
                 { nome: "Kit 100 doces (50 Finos + 50 Tradicionais)", preco: 200.00, kit: true }
             ]
@@ -155,6 +160,7 @@
 
     const cart = {};
 
+    
     window.toggleCategoria = function(idContainer, idSeta) {
         const container = document.getElementById(idContainer);
         const seta = document.getElementById(idSeta);
@@ -302,7 +308,7 @@
 
         if (delta > 0 && cart[id].isKit && novoValor > MAX_QTD_KIT) {
             alert(`Para pedidos acima de ${MAX_QTD_KIT} kits, por favor entre em contato direto para verificar disponibilidade.`);
-            return; // Cancela a ação
+            return;
         }
 
         if (novoValor < 0) novoValor = 0;
@@ -317,7 +323,7 @@
 
         if (cart[id].isKit && novoValor > MAX_QTD_KIT) {
             alert(`Para pedidos acima de ${MAX_QTD_KIT} kits, por favor entre em contato direto.`);
-            document.getElementById(`qty-${id}`).value = 0; // Reseta ou mantém o anterior
+            document.getElementById(`qty-${id}`).value = 0;
             novoValor = 0;
         }
 
@@ -507,7 +513,6 @@
             return;
         }
 
-        // --- VALIDAÇÃO DINÂMICA DOS KITS ---
         for(let id in cart) {
             if(cart[id].qtd > 0 && cart[id].isKit) {
                 for(let i=1; i <= cart[id].qtd; i++) {
