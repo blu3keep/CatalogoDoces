@@ -1,6 +1,7 @@
 (function() { 
     "use strict";
 
+    // Redirecionamento HTTPS e correções de frame
     if (location.hostname !== "localhost" && location.hostname !== "127.0.0.1" && location.protocol !== 'https:') {
         location.replace(`https://${location.hostname}${location.pathname}${location.search}`);
     }
@@ -13,9 +14,9 @@
     const inputData = document.getElementById('data-pedido');
     if(inputData) inputData.min = hoje;
 
-    const MINIMO_GLOBAL_NORMAIS = 50; 
-    const MINIMO_POR_ITEM_NORMAL = 25; 
-    const MAX_QTD_KIT = 5; 
+    const MINIMO_GLOBAL_NORMAIS = 50;
+    const MINIMO_POR_ITEM_NORMAL = 25;
+    const MAX_QTD_KIT = 5;
 
     const menu = Object.freeze([
         {
@@ -92,7 +93,12 @@
                 { nome: "Ninho com Chocolate e Nozes", preco: 2.75 },
                 { nome: "Ninho com Chocolate e Damasco", preco: 2.75 },
                 { nome: "Box de Pistache", preco: 2.75 },
-                { nome: "Gianduia com Avelã", preco: 2.75 }
+                { nome: "Gianduia com Avelã", preco: 2.75 },
+                { nome: "Damasco com Creme de Pistache", preco: 2.75 },
+                { nome: "Tulipa de Damasco", preco: 2.75 },
+                { nome: "Ganache com Nozes", preco: 2.75 },
+                // Novo item adicionado:
+                { nome: "Brigadeiro Rendado", preco: 2.75 }
             ]
         },
         {
@@ -126,7 +132,9 @@
                 { nome: "Maracujá com Nutella", preco: 2.00 },
                 { nome: "Brigadeiro com Oreo", preco: 2.00 },
                 { nome: "Baunilha com Geleia de Morango", preco: 2.00 },
-                { nome: "Doce de Leite com Nozes", preco: 2.00 }
+                { nome: "Doce de Leite com Nozes", preco: 2.00 },
+                { nome: "Ganachi Blend", preco: 2.00 },
+                { nome: "Ganachi Branco", preco: 2.00 }
             ]
         },
         {
@@ -136,7 +144,6 @@
                 { nome: "Caixa com 4 doces tradicionais", preco: 12.00 },
                 { nome: "Caixa com 12 doces tradicionais", preco: 25.00 },
                 { nome: "Caixa degustação luxo (15 un. variadas)", preco: 45.00 },
-                
                 { nome: "Degustação ou luxo 24 doces", preco: 72.00 },
                 { nome: "Degustação ou luxo 30 doces", preco: 90.00 }
             ]
@@ -147,9 +154,6 @@
             itens: [
                 { nome: "Caixinha com 4 unidades (Tradicionais)", preco: 12.00 },
                 { nome: "Caixinha luxo com 4 doces (Tradicionais)", preco: 20.00 },
-                { nome: "Guirlanda com 6 doces", preco: 15.00 },
-                { nome: "Árvore com 6 doces", preco: 20.00 },
-                
                 { nome: "Caixa com 12 doces", preco: 25.00 },
                 { nome: "Árvore de Natal com 50 doces", preco: 70.00 }, 
                 { nome: "Taça de uva ou morango", preco: 70.00 },
@@ -160,7 +164,6 @@
 
     const cart = {};
 
-    
     window.toggleCategoria = function(idContainer, idSeta) {
         const container = document.getElementById(idContainer);
         const seta = document.getElementById(idSeta);
@@ -513,6 +516,7 @@
             return;
         }
 
+        // --- VALIDAÇÃO DINÂMICA DOS KITS ---
         for(let id in cart) {
             if(cart[id].qtd > 0 && cart[id].isKit) {
                 for(let i=1; i <= cart[id].qtd; i++) {
