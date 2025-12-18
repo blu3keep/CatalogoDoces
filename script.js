@@ -97,7 +97,6 @@
                 { nome: "Damasco com Creme de Pistache", preco: 2.75 },
                 { nome: "Tulipa de Damasco", preco: 2.75 },
                 { nome: "Ganache com Nozes", preco: 2.75 },
-                // Novo item adicionado:
                 { nome: "Brigadeiro Rendado", preco: 2.75 }
             ]
         },
@@ -155,8 +154,8 @@
                 { nome: "Caixinha com 4 unidades (Tradicionais)", preco: 12.00 },
                 { nome: "Caixinha luxo com 4 doces (Tradicionais)", preco: 20.00 },
                 { nome: "Caixa com 12 doces", preco: 25.00 },
-                { nome: "Árvore de Natal com 50 doces", preco: 70.00 }, 
-                { nome: "Taça de uva ou morango", preco: 70.00 },
+                { nome: "Árvore de Natal com 50 doces", preco: 70.00 },
+                // Removido: Taça de uva ou morango
                 { nome: "Kit 100 doces (50 Finos + 50 Tradicionais)", preco: 200.00, kit: true }
             ]
         }
