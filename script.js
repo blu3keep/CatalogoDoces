@@ -146,18 +146,6 @@
                 { nome: "Degustação ou luxo 24 doces", preco: 72.00 },
                 { nome: "Degustação ou luxo 30 doces", preco: 90.00 }
             ]
-        },
-        {
-            categoria: "Natal Lavie",
-            regraLivre: true, 
-            itens: [
-                { nome: "Caixinha com 4 unidades (Tradicionais)", preco: 12.00 },
-                { nome: "Caixinha luxo com 4 doces (Tradicionais)", preco: 20.00 },
-                { nome: "Caixa com 12 doces", preco: 25.00 },
-                { nome: "Árvore de Natal com 50 doces", preco: 70.00 },
-                // Removido: Taça de uva ou morango
-                { nome: "Kit 100 doces (50 Finos + 50 Tradicionais)", preco: 200.00, kit: true }
-            ]
         }
     ]);
 
