@@ -132,8 +132,8 @@
                 { nome: "Brigadeiro com Oreo", preco: 2.00 },
                 { nome: "Baunilha com Geleia de Morango", preco: 2.00 },
                 { nome: "Doce de Leite com Nozes", preco: 2.00 },
-                { nome: "Ganachi Blend", preco: 2.00 },
-                { nome: "Ganachi Branco", preco: 2.00 }
+                { nome: "Ganache Blend", preco: 2.00 },
+                { nome: "Ganache Branco", preco: 2.00 }
             ]
         },
         {
