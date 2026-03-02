@@ -20,6 +20,22 @@
 
     const menu = Object.freeze([
         {
+            categoria: "Páscoa Lavie",
+            regraLivre: true, 
+            itens: [
+                { nome: "Tablete Ovo 180g Brigadeiro ao Leite ou 50%", preco: 25.00 },
+                { nome: "Tablete Ovo 180g Caramelo", preco: 25.00 },
+                { nome: "Tablete Ovo 180g Ninho com Nutella", preco: 30.00 },
+                { nome: "Tablete Ovo 180g Ninho com Geleia de Morango", preco: 30.00 },
+                { nome: "Tablete Ovo 180g Pistache Crocante", preco: 35.00 },
+                { nome: "Tablete Ovo 180g Pistache com Geleia de Morango", preco: 35.00 },
+                { nome: "Caixa Tema Páscoa 4 Doces", preco: 12.00 },
+                { nome: "Caixa Tema Páscoa 6 Doces", preco: 18.00 },
+                { nome: "Caixa Luxo Tema Páscoa 4 Doces", preco: 25.00 },
+                { nome: "Caixa Ovinho Morango", preco: 12.00 }
+            ]
+        },
+        {
             categoria: "Brigadeiros Tradicionais",
             regraLivre: false, 
             itens: [
