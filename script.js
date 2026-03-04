@@ -29,6 +29,8 @@
                 { nome: "Tablete Ovo 180g Ninho com Geleia de Morango", preco: 30.00 },
                 { nome: "Tablete Ovo 180g Pistache Crocante", preco: 35.00 },
                 { nome: "Tablete Ovo 180g Pistache com Geleia de Morango", preco: 35.00 },
+                { nome: "Tablete Ovo 180g Gianduia com Avelã", preco: 35.00 },
+                { nome: "Tablete Liso ou Cookies com Brigadeiros", preco: 25.00 },
                 { nome: "Caixa Tema Páscoa 4 Doces", preco: 12.00 },
                 { nome: "Caixa Tema Páscoa 6 Doces", preco: 18.00 },
                 { nome: "Caixa Luxo Tema Páscoa 4 Doces", preco: 25.00 },
