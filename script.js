@@ -38,6 +38,24 @@
             ]
         },
         {
+            categoria: "Barras Lavie",
+            regraLivre: true, 
+            itens: [
+                { nome: "Barra Tradicional Brigadeiro ou Brigadeiro 50% (Aprox. 300g)", preco: 30.00 },
+                { nome: "Barra Tradicional Ninho (Aprox. 300g)", preco: 30.00 },
+                { nome: "Barra Tradicional Beijinho (Aprox. 300g)", preco: 30.00 },
+                { nome: "Barra Tradicional Paçoca (Aprox. 300g)", preco: 30.00 },
+                { nome: "Barra Tradicional Paçoca c/ Doce de Leite (Aprox. 300g)", preco: 30.00 },
+                { nome: "Barra Especial Recheio de Chocolate Branco c/ Geleia de Maracujá (Aprox. 300g)", preco: 35.00 },
+                { nome: "Barra Especial Recheio de Chocolate Branco c/ Geleia de Morango (Aprox. 300g)", preco: 35.00 },
+                { nome: "Barra Especial Pistache c/ Geleia de Maracujá (Aprox. 300g)", preco: 35.00 },
+                { nome: "Barra Especial Pistache c/ Geleia de Morango (Aprox. 300g)", preco: 35.00 },
+                { nome: "Barra Especial Ninho c/ Nutella (Aprox. 300g)", preco: 35.00 },
+                { nome: "Barra Especial Oreo (Aprox. 300g)", preco: 35.00 },
+                { nome: "Barra Especial Pistache (Aprox. 300g)", preco: 35.00 }
+            ]
+        },
+        {
             categoria: "Brigadeiros Tradicionais",
             regraLivre: false, 
             itens: [
@@ -155,7 +173,7 @@
             ]
         },
         {
-            categoria: "Para você ou para presentear",
+            categoria: "Para Você ou Para Presentear",
             regraLivre: true, 
             itens: [
                 { nome: "Caixa com 4 doces tradicionais", preco: 12.00 },
