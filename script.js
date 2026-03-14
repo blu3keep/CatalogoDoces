@@ -23,6 +23,7 @@
             categoria: "Páscoa Lavie",
             regraLivre: true, 
             itens: [
+                { nome: "Card com 1 Brigadeiro Big Lavie", preco: 5.00 },
                 { nome: "Tablete Ovo 180g Brigadeiro ao Leite ou 50%", preco: 25.00 },
                 { nome: "Tablete Ovo 180g Caramelo", preco: 25.00 },
                 { nome: "Tablete Ovo 180g Ninho com Nutella", preco: 30.00 },
@@ -52,6 +53,7 @@
                 { nome: "Barra Especial Pistache c/ Geleia de Morango (Aprox. 300g)", preco: 35.00 },
                 { nome: "Barra Especial Ninho c/ Nutella (Aprox. 300g)", preco: 35.00 },
                 { nome: "Barra Especial Oreo (Aprox. 300g)", preco: 35.00 },
+                { nome: "Barra Especial Lotus Biscoff (Aprox. 300g)", preco: 35.00 },
                 { nome: "Barra Especial Pistache (Aprox. 300g)", preco: 35.00 }
             ]
         },
@@ -79,6 +81,7 @@
             categoria: "Brigadeiros Especiais",
             regraLivre: false,
             itens: [
+                { nome: "Lotus Biscoff", preco: 1.70 },
                 { nome: "Parmesão c/ Doce de Leite", preco: 1.70 },
                 { nome: "Doce de Leite c/ Ameixa", preco: 1.70 },
                 { nome: "Tortinha de Limão", preco: 1.70 },
